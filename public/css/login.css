@@ -1,0 +1,86 @@
+/* box to hold the login content */
+.login {
+    max-width: 400px;
+    margin: 50px auto;
+    padding: 30px;
+    border: 2px solid #242424;
+    border-radius: 8px;
+    background-color: #ffffff;
+}
+
+/* welcome back text */
+.login h1 {
+    text-align: center;
+    font-size: 2rem;
+    color: #242424;
+}
+
+/* css to edit the breeze setup */
+.login input[type="email"],
+.login input[type="password"] {
+    width: 100%;
+    padding: 10px;
+    margin-top: 10px;
+    border: 1px solid #ada9a9;
+    border-radius: 3px;
+    font-size: 1rem;
+}
+
+/* css to edit the breeze error */
+.login-error {
+    color: #ff1900;
+    font-size: 1rem;
+    list-style-type: none;
+}
+
+/* login button styling */
+.login button {
+    width: 100%;
+    margin-top: 10px;
+    background-color: #242424;
+    color: #ffa51f;
+    padding: 10px 10px;
+    border-radius: 8px;
+    font-size: 1rem;
+    cursor: pointer;
+}
+
+/* login button hover */
+.login button:hover {
+    background-color: #2e2e2e;
+}
+
+/* register page link styling */
+.login-register a {
+    width: 100%;
+    margin-top: 10px;
+    background-color: #ffa51f;
+    color: #242424;
+    padding: 10px 10px;
+    border-radius: 8px;
+    font-size: 1rem;
+    display: inline-block;
+    text-align: center;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+/* register link hover */
+.login-register a:hover {
+    background-color: #ffb23e;
+}
+
+/* push remember button down a bit */
+.login-remember {
+    margin-top: 10px;
+}
+
+/* push forgot button up a bit */
+.login-forgot {
+    margin-bottom: 10px;
+}
+
+/* keep text same color even after clicking it */
+.login-forgot a {
+    color: #0066ff;
+}

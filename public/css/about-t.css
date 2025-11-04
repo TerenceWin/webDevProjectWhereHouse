@@ -1,0 +1,55 @@
+/* about container to hold all the content */
+.about {
+    margin-top: 30px;
+    padding: 30px;
+    border: 2px solid #242424;
+    border-radius: 8px;
+    background-color: #ffffff;
+}
+
+/* about page title */
+.about h1 {
+    text-align: center;
+    font-size: 2rem;
+    color: #242424;
+}
+
+/* about info */
+.about p {
+    text-align: center;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    font-size: 1.5rem;
+    color: #242424;
+}
+
+/* info boxes for the developers section */
+.boxes {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 4rem;
+    margin-top: 20px;
+    margin-bottom: 10px;
+}
+
+.box {
+    padding: 20px 20px;
+    background-color: #242424;
+    border-radius: 10px;
+    transition: all 0.5s ease;
+}
+
+.box h1 {
+    font-size: 1.3rem;
+    color: #ffa51f;
+}
+
+.box p {
+    font-size: 1rem;
+    color: #ffffff;
+}
+
+.box:hover {
+    transform: scale(1.1);
+}

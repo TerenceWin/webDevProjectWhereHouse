@@ -1,0 +1,40 @@
+/* contact container to hold all the content */
+.contact {
+    margin-top: 30px;
+    padding: 30px;
+    border: 2px solid #242424;
+    border-radius: 8px;
+    background-color: #ffffff;
+}
+
+/* contact page title */
+.contact h1 {
+    font-size: 2rem;
+    color: #242424;
+}
+
+/* contact info */
+.contact p {
+    margin-top: 10px;
+    font-size: 1.5rem;
+    color: #242424;
+}
+
+/* email button styling */
+.contact a {
+    margin-top: 15px;
+    background-color: #ffa51f;
+    color: #242424;
+    padding: 10px 10px;
+    border-radius: 8px;
+    font-size: 1.2rem;
+    display: inline-block;
+    text-align: center;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+/* email button hover effect */
+.contact a:hover {
+    background-color: #ffb23e;
+}

@@ -1,0 +1,296 @@
+/* intro section */
+.intro {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    background-color: #ffa51f;
+    border: 2px solid #000000;
+    padding: 20px 35px;
+}
+
+/* intro h1 text */
+.intro-text h1 {
+    font-size: 4rem;
+    color: #242424;
+}
+
+/* intro p text */
+.intro-text p {
+    font-size: 2rem;
+    margin-left: 0.6rem;
+    color: #ffffff;
+    font-weight: 600;
+}
+
+/* intro link to register */
+.intro-button {
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+}
+
+.intro-button a {
+    display: inline-block;
+    text-decoration: none;
+    background-color: #242424;
+    color: #ffa51f;
+    padding: 10px 10px;
+    border-radius: 8px;
+    font-size: 1.5rem;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+/* hover effect */
+.intro-button a:hover {
+    transform: scale(1.05);
+}
+
+/* logo */
+.intro img {
+    height: 200px;
+}
+
+/* section for what is WhereHouse */
+.section1 {
+    display: flex;
+    justify-content: space-between;
+    border-bottom: 2px solid;
+    margin-top: 20px;
+    text-align: left;
+}
+
+.section1-text h1 {
+    color: #242424;
+    font-size: 3rem;
+}
+
+.section1-text p {
+    font-size: 1.8rem;
+    color: #363636;
+    margin-bottom: 20px;
+}
+
+.section1 img {
+    margin-bottom: 20px;
+    height: 300px;
+}
+
+/* section for how WhereHouse works */
+.section2 {
+    text-align: center;
+    border-bottom: 2px solid;
+    margin-top: 20px;
+}
+
+.section2-text h1 {
+    color: #242424;
+    font-size: 3rem;
+}
+
+/* info boxes for the how section */
+.boxes {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 4rem;
+    margin-top: 20px;
+    margin-bottom: 50px;
+}
+
+.box {
+    padding: 20px 20px;
+    background-color: #242424;
+    border-radius: 10px;
+    transition: all 0.5s ease;
+}
+
+.box h1 {
+    font-size: 1.5rem;
+    color: #ffa51f;
+}
+
+.box p {
+    font-size: 1.2rem;
+    color: #ffffff;
+}
+
+.box:hover {
+    transform: scale(1.1);
+}
+
+/* section for why to use WhereHouse */
+.section3 {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+    flex-direction: row-reverse;
+    text-align: right;
+}
+
+.section3-text h1 {
+    color: #242424;
+    font-size: 3rem;
+}
+
+.section3-text p {
+    font-size: 1.8rem;
+    color: #363636;
+    margin-bottom: 20px;
+}
+
+.section3 img {
+    margin-bottom: 20px;
+    height: 300px;
+}
+
+/* adjust for smaller screens */
+@media screen and (max-width: 800px) {
+    /* intro section */
+    .intro {
+        display: flex;
+        flex-wrap: wrap;
+        flex-direction: column;
+        align-items: center;
+        background-color: #ffa51f;
+        border: 2px solid #000000;
+        padding: 20px 35px;
+    }
+
+    /* intro h1 text */
+    .intro-text h1 {
+        font-size: 2rem;
+        color: #242424;
+        text-align: center;
+    }
+
+    /* intro p text */
+    .intro-text p {
+        font-size: 1.5rem;
+        color: #ffffff;
+        text-align: center;
+        font-weight: 600;
+    }
+
+    /* intro link to register */
+    .intro-button {
+        text-align: center;
+        margin-top: 1rem;
+        margin-bottom: 1rem;
+    }
+
+    .intro-button a {
+        text-align: center;
+        display: inline-block;
+        text-decoration: none;
+        background-color: #242424;
+        color: #ffa51f;
+        padding: 10px 10px;
+        border-radius: 8px;
+        font-size: 1rem;
+        font-weight: 600;
+        transition: all 0.3s ease;
+    }
+
+    /* hover effect */
+    .intro-button a:hover {
+        transform: scale(1.05);
+    }
+
+    /* logo */
+    .intro img {
+        height: 100px;
+    }
+
+    .section1 {
+        display: flex;
+        flex-wrap: wrap;
+        flex-direction: column;
+        align-items: center;
+        border-bottom: 2px solid;
+        margin-top: 20px;
+        text-align: center;
+    }
+
+    .section1-text h1 {
+        color: #242424;
+        font-size: 2rem;
+    }
+
+    .section1-text p {
+        font-size: 1.5rem;
+        color: #363636;
+    }
+
+    .section1 img {
+        margin-bottom: 20px;
+        height: 200px;
+    }
+
+    /* section for how WhereHouse works */
+    .section2 {
+        text-align: center;
+        border-bottom: 2px solid;
+        margin-top: 20px;
+    }
+
+    .section2-text h1 {
+        color: #242424;
+        font-size: 2rem;
+    }
+
+    /* info boxes for the how section */
+    .boxes {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 4rem;
+        margin-top: 20px;
+        margin-bottom: 50px;
+    }
+
+    .box {
+        padding: 20px 20px;
+        background-color: #242424;
+        border-radius: 10px;
+        transition: all 0.5s ease;
+    }
+
+    .box h1 {
+        font-size: 1.3rem;
+        color: #ffa51f;
+    }
+
+    .box p {
+        font-size: 1.1rem;
+        color: #ffffff;
+    }
+
+    .box:hover {
+        transform: scale(1.1);
+    }
+
+    .section3 {
+        display: flex;
+        flex-wrap: wrap;
+        flex-direction: column;
+        align-items: center;
+        margin-top: 20px;
+        text-align: center;
+    }
+
+    .section3-text h1 {
+        color: #242424;
+        font-size: 2rem;
+    }
+
+    .section3-text p {
+        font-size: 1.5rem;
+        color: #363636;
+    }
+
+    .section3 img {
+        margin-bottom: 20px;
+        height: 200px;
+    }
+}
