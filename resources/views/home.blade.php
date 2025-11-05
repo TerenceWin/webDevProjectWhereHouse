@@ -3,7 +3,7 @@
 @section('title', 'Home')
 
 @section('head')
-    <link rel="stylesheet" href="{{ asset('css/home.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/home.css') }}?v={{ time() }}">
 @endsection
 
 @section('content')

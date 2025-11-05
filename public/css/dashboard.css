@@ -1,0 +1,60 @@
+/* make it so the dashboard content scrolls within the window */
+.dashboard {
+    overflow-y: auto;
+    height: 100%;
+}
+
+/* log out button styling */
+.dashboard-right button {
+    position: sticky;
+    float: right;
+    margin-left: 10px;
+    background-color: #242424;
+    color: #ffa51f;
+    padding: 10px 10px;
+    border-radius: 8px;
+    font-size: 1rem;
+    cursor: pointer;
+}
+
+.dashboard-left button {
+    position: sticky;
+    float: left;
+    background-color: #242424;
+    color: #ffa51f;
+    padding: 10px 10px;
+    border-radius: 8px;
+    font-size: 1rem;
+    cursor: pointer;
+}
+
+/* log out button hover */
+.dashboard button:hover {
+    background-color: #2e2e2e;
+}
+
+/* adjust for smaller screens */
+@media screen and (max-width: 500px) {
+    /* log out button styling */
+    .dashboard-right button {
+        position: sticky;
+        float: right;
+        background-color: #242424;
+        color: #ffa51f;
+        padding: 10px 10px;
+        border-radius: 8px;
+        font-size: 0.7rem;
+        cursor: pointer;
+    }
+
+    .dashboard-left button {
+        position: sticky;
+        background-color: #242424;
+        float: left;
+        color: #ffa51f;
+        padding: 10px 10px;
+        border-radius: 8px;
+        font-size: 0.7rem;
+        cursor: pointer;
+    }
+}

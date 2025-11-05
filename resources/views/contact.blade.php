@@ -3,7 +3,7 @@
 @section('title', 'Contact')
 
 @section('head')
-    <link rel="stylesheet" href="{{ asset('css/contact.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/contact.css') }}?v={{ time() }}">
     <style>
         body {
             background-image: url('{{ asset('images/ContactBackground.png') }}');

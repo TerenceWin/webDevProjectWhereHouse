@@ -3,7 +3,7 @@
 @section('title', 'Regsiter')
 
 @section('head')
-    <link rel="stylesheet" href="{{ asset('css/register.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/register.css') }}?v={{ time() }}">
 @endsection
 
 @section('content')

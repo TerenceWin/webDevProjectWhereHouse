@@ -3,32 +3,56 @@
 @section('title', 'Dashboard')
 
 @section('head')
-    <link rel="stylesheet" href="{{ asset('css/dashboard.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/dashboard.css') }}?v={{ time() }}">
 @endsection
 
 @section('content')
 
-    <x-app-layout>
-        <x-slot name="header">
-            <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-                {{ __('Dashboard') }}
-            </h2>
-        </x-slot>
+    <div class="dashboard">
 
-        <div class="py-12">
-            <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-                <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                    <div class="p-6 text-gray-900">
-                        {{ __("You're logged in!") }}
-                    </div>
+        <div class="dashboard-right">
+            <a href="{{ route('profile.edit') }}">
+                <button type="button">Profile</button>
+            </a>
+        </div>
+
+        <div class="dashboard-right">
+            <form method="POST" action="{{ route('logout') }}">
+                @csrf
+                <button type="submit">Log Out</button>
+            </form>
+        </div>
+
+        <div class="dashboard-left">
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#createBusinessModal">
+                Create Warehouse
+            </button>
+        </div>
+
+
+    </div>
+
+    <!-- Modal -->
+    <div class="modal fade" id="createBusinessModal" tabindex="-1" aria-labelledby="createBusinessModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="createBusinessModalLabel">Create New Business</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <input type="text" class="form-control" id="businessName" placeholder="Enter business name">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary">Create</button>
                 </div>
             </div>
         </div>
+    </div>
 
-        <form method="POST" action="{{ route('logout') }}">
-            @csrf
-            <button type="submit">Log Out</button>
-        </form>
 
-    </x-app-layout>
+
+
 @endsection
