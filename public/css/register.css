@@ -39,8 +39,8 @@
     width: 100%;
     margin-top: 10px;
     background-color: #242424;
-    color: #ffa51f;
-    padding: 10px 10px;
+    color: #ffa51f !important;
+    padding: 10px 10px !important;
     border-radius: 8px;
     font-size: 1rem;
     cursor: pointer;

@@ -17,6 +17,11 @@
             margin: 0;
             padding: 0;
         }
+
+        .ms-3,
+        .ms-4 {
+            margin: 0 !important;
+        }
     </style>
 
     {{-- yield for the page head section (used for individual css files) --}}
@@ -56,6 +61,9 @@
 
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Page-specific JavaScript files -->
+    @yield('scripts') <!-- This will load scripts like dashboard.js for the dashboard page -->
 
 </body>
 

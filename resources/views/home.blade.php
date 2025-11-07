@@ -34,8 +34,8 @@
         </div>
         <div class="boxes">
             <div class="box">
-                <h1>Create a Business</h1>
-                <p>Register with us to create a <br> business and design your warehouse <br> layout.</p>
+                <h1>Create a Warehouse</h1>
+                <p>Register with us to create <br> warehouses and utilize our simplistic <br> 2D grid layout.</p>
             </div>
             <div class="box">
                 <h1>Add Products</h1>
