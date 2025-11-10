@@ -5,31 +5,30 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Warehouse extends Model
+class Section extends Model
 {
     use HasFactory;
 
     protected $fillable = [
-        'warehouse_name',
+        'section_name',
         'user_id',
+        'warehouse_id',
     ];
 
-    // link user to warehouse
+    // A section belongs to a user
     public function user()
     {
         return $this->belongsTo(User::class);
     }
 
-    // In Warehouse Model
-    public function sections()
+    // A section belongs to a warehouse
+    public function warehouse()
     {
-        return $this->hasMany(Section::class);
+        return $this->belongsTo(Warehouse::class);
     }
 
     public function products()
     {
         return $this->hasMany(Product::class);
     }
-
-
 }

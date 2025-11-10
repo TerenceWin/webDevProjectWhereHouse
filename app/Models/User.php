@@ -52,4 +52,18 @@ class User extends Authenticatable
         return $this->hasMany(Warehouse::class);
     }
 
+    // In Warehouse Model
+    public function sections()
+    {
+        return $this->hasMany(Section::class);
+    }
+
+    public function products()
+    {
+        return $this->hasMany(Product::class);
+    }
+
+    
+    
+
 }
