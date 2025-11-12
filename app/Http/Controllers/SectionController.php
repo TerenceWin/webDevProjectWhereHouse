@@ -10,25 +10,33 @@ class SectionController extends Controller
 {
     public function store(Request $request, $warehouseId)
     {
-        // Validate the section name
-        $request->validate([
-            'section_name' => 'required|string|max:255',
-        ]);
+        try {
+            $request->validate([
+                'section_name' => 'required|string|max:255',
+                'grid_x' => 'nullable|integer|min:0|max:29',  // ADD THIS (0-29 for 30 columns)
+                'grid_y' => 'nullable|integer|min:0|max:19',  // ADD THIS (0-19 for 20 rows)
+            ]);
 
-        // Find the warehouse by ID for the logged-in user
-        $warehouse = auth()->user()->warehouses()->findOrFail($warehouseId);
+            $warehouse = auth()->user()->warehouses()->findOrFail($warehouseId);
 
-        // Create a new section - Laravel will auto-set warehouse_id
-        $section = Section::create([
-            'section_name' => $request->section_name,
-            'user_id' => auth()->id(),
-            'warehouse_id' => $warehouse->id,
-        ]);
+            $section = Section::create([
+                'section_name' => $request->section_name,
+                'user_id' => auth()->id(),
+                'warehouse_id' => $warehouse->id,
+                'grid_x' => $request->grid_x,  // ADD THIS
+                'grid_y' => $request->grid_y,  // ADD THIS
+            ]);
 
-        return response()->json([
-            'success' => true,
-            'section' => $section,
-        ]);
+            return response()->json([
+                'success' => true,
+                'section' => $section,
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Error creating section: ' . $e->getMessage()
+            ], 500);
+        }
     }
 
     // List all sections in a warehouse
@@ -56,5 +64,34 @@ class SectionController extends Controller
         $section->delete();
 
         return response()->json(['success' => true]);
+    }
+
+    // Add this method to SectionController
+    public function updatePosition(Request $request, $warehouseId, $sectionId)
+    {
+        try {
+            $request->validate([
+                'grid_x' => 'required|integer|min:0|max:29',
+                'grid_y' => 'required|integer|min:0|max:19',
+            ]);
+
+            $warehouse = auth()->user()->warehouses()->findOrFail($warehouseId);
+            $section = $warehouse->sections()->findOrFail($sectionId);
+
+            $section->update([
+                'grid_x' => $request->grid_x,
+                'grid_y' => $request->grid_y,
+            ]);
+
+            return response()->json([
+                'success' => true,
+                'section' => $section,
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Error updating position: ' . $e->getMessage()
+            ], 500);
+        }
     }
 }

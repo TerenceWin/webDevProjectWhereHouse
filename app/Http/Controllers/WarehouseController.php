@@ -20,7 +20,7 @@ class WarehouseController extends Controller
         }
 
         // Otherwise, render a Blade view (optional)
-        return view('warehouses.index', compact('warehouses'));
+        return view('dashboard', compact('warehouses'));
     }
 
     // Create a new warehouse via AJAX

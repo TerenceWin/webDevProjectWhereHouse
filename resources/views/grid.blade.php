@@ -10,101 +10,112 @@
 
 @section('content')
 
-    <div class="container">
-        <h2>{{ $warehouse->warehouse_name }}</h2>
-
-        <!-- Create Section Button -->
-        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#createSectionModal">
-            Create Section
-        </button>
-
-        <!-- Modal for Creating Section -->
-        <div class="modal fade" id="createSectionModal" tabindex="-1" aria-labelledby="createSectionModalLabel"
-            aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="createSectionModalLabel">Create New Section</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                        <input type="text" class="form-control" id="sectionName" placeholder="Enter section name">
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                        <button type="button" class="btn btn-primary" id="createSectionBtn">Create</button>
-                    </div>
-                </div>
+    <div class="grid-container">
+        <!-- Left Sidebar -->
+        <div class="sidebar">
+            <div class="sidebar-header">
+                <h2>{{ $warehouse->warehouse_name }}</h2>
+                <a href="{{ route('dashboard') }}" class="btn-back">← Back</a>
             </div>
-        </div>
 
-        <!-- Display Sections with Products -->
-        <div class="section-list mt-4">
-            @foreach ($warehouse->sections as $section)
-                <div class="section-container" data-section-id="{{ $section->id }}">
-                    <div class="section-header">
-                        <h3 class="section-name">{{ $section->section_name }}</h3>
-                        <div class="section-actions">
-                            <button class="btn-add-product" data-section-id="{{ $section->id }}" data-bs-toggle="modal"
-                                data-bs-target="#createProductModal">
-                                + Add Product
-                            </button>
-                            <button class="delete-section-btn" data-section-id="{{ $section->id }}">×</button>
-                        </div>
-                    </div>
+            <!-- Search Bar -->
+            <div class="search-container">
+                <input type="text" id="searchInput" class="search-input" placeholder="Search products...">
+                <button id="clearSearchBtn" class="btn-clear-search">×</button>
+            </div>
 
-                    <div class="product-list" data-section-id="{{ $section->id }}">
-                        @foreach ($section->products as $product)
-                            <div class="product-item" data-product-id="{{ $product->id }}">
-                                <div class="product-info">
-                                    <span class="product-name">{{ $product->product_name }}</span>
-                                    @if ($product->sku)
-                                        <span class="product-sku">SKU: {{ $product->sku }}</span>
-                                    @endif
-                                    <span class="product-quantity">Qty: {{ $product->quantity }}</span>
-                                </div>
-                                <button class="delete-product-btn" data-section-id="{{ $section->id }}"
-                                    data-product-id="{{ $product->id }}">×</button>
+            <!-- Create Section Button -->
+            <button type="button" class="btn-create-section" id="createSectionBtn">
+                + Create Section
+            </button>
+
+            <!-- Sections List -->
+            <div class="sections-list" id="sectionsList">
+                @foreach ($warehouse->sections as $section)
+                    <div class="section-item" data-section-id="{{ $section->id }}" data-grid-x="{{ $section->grid_x }}"
+                        data-grid-y="{{ $section->grid_y }}">
+                        <div class="section-item-header">
+                            <span class="section-item-name">{{ $section->section_name }}</span>
+                            <div class="section-item-actions">
+                                <button class="btn-add-product" data-section-id="{{ $section->id }}">+</button>
+                                <button class="btn-delete-section" data-section-id="{{ $section->id }}">×</button>
                             </div>
-                        @endforeach
-                    </div>
-                </div>
-            @endforeach
-        </div>
-
-        <!-- Modal for Creating Product -->
-        <div class="modal fade" id="createProductModal" tabindex="-1" aria-labelledby="createProductModalLabel"
-            aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="createProductModalLabel">Add New Product</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                        <input type="hidden" id="productSectionId">
-                        <div class="mb-3">
-                            <label for="productName" class="form-label">Product Name</label>
-                            <input type="text" class="form-control" id="productName" placeholder="Enter product name">
                         </div>
-                        <div class="mb-3">
-                            <label for="productSku" class="form-label">SKU (Optional)</label>
-                            <input type="text" class="form-control" id="productSku" placeholder="Enter SKU">
-                        </div>
-                        <div class="mb-3">
-                            <label for="productQuantity" class="form-label">Quantity</label>
-                            <input type="number" class="form-control" id="productQuantity" placeholder="Enter quantity"
-                                value="0" min="0">
+                        <div class="section-item-products">
+                            @foreach ($section->products as $product)
+                                <div class="product-item-small" data-product-id="{{ $product->id }}">
+                                    <span class="product-item-name">{{ $product->product_name }}</span>
+                                    <span class="product-item-qty">Qty: {{ $product->quantity }}</span>
+                                    <button class="btn-delete-product" data-section-id="{{ $section->id }}"
+                                        data-product-id="{{ $product->id }}">×</button>
+                                </div>
+                            @endforeach
                         </div>
                     </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                        <button type="button" class="btn btn-primary" id="createProductBtn">Add Product</button>
-                    </div>
-                </div>
+                @endforeach
             </div>
         </div>
 
+        <!-- Main Grid Area -->
+        <div class="grid-area">
+            <div class="grid-canvas" id="gridCanvas">
+                <!-- Grid cells will be generated by JavaScript -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal for Creating Section -->
+    <div class="modal fade" id="createSectionModal" tabindex="-1" aria-labelledby="createSectionModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="createSectionModalLabel">Create New Section</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <input type="text" class="form-control" id="sectionNameInput" placeholder="Enter section name">
+                    <p class="modal-hint">Click on an empty grid cell to place the section</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal for Adding Product -->
+    <div class="modal fade" id="createProductModal" tabindex="-1" aria-labelledby="createProductModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="createProductModalLabel">Add Product to <span id="modalSectionName"></span>
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" id="productSectionId">
+                    <div class="mb-3">
+                        <label for="productName" class="form-label">Product Name</label>
+                        <input type="text" class="form-control" id="productName" placeholder="Enter product name">
+                    </div>
+                    <div class="mb-3">
+                        <label for="productSku" class="form-label">SKU (Optional)</label>
+                        <input type="text" class="form-control" id="productSku" placeholder="Enter SKU">
+                    </div>
+                    <div class="mb-3">
+                        <label for="productQuantity" class="form-label">Quantity</label>
+                        <input type="number" class="form-control" id="productQuantity" placeholder="Enter quantity"
+                            value="0" min="0">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary" id="addProductBtn">Add Product</button>
+                </div>
+            </div>
+        </div>
     </div>
 
 @endsection

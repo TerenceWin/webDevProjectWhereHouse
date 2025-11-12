@@ -10,9 +10,11 @@ class Section extends Model
     use HasFactory;
 
     protected $fillable = [
-        'section_name',
-        'user_id',
-        'warehouse_id',
+    'section_name',
+    'user_id',
+    'warehouse_id',
+    'grid_x',  // ADD THIS
+    'grid_y',  // ADD THIS
     ];
 
     // A section belongs to a user

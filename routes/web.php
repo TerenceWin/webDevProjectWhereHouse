@@ -50,6 +50,9 @@ Route::middleware('auth')->group(function () {
     Route::post('/warehouses/{warehouseId}/sections', [SectionController::class, 'store'])->name('sections.store');
     Route::get('/warehouses/{warehouseId}/sections', [SectionController::class, 'index'])->name('sections.index');
     Route::delete('/warehouses/{warehouseId}/sections/{sectionId}', [SectionController::class, 'destroy'])->name('sections.destroy');
+
+    // ADD THIS NEW ROUTE:
+    Route::put('/warehouses/{warehouseId}/sections/{sectionId}/position', [SectionController::class, 'updatePosition'])->name('sections.updatePosition');
 });
 
 Route::middleware('auth')->group(function () {
@@ -60,6 +63,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/warehouses/{warehouseId}/sections/{sectionId}/products/{productId}', [ProductController::class, 'show'])->name('products.show');
     Route::put('/warehouses/{warehouseId}/sections/{sectionId}/products/{productId}', [ProductController::class, 'update'])->name('products.update');
 });
+
+
 
 
 require __DIR__.'/auth.php';
