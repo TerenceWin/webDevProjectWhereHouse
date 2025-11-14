@@ -20,30 +20,86 @@
     padding: 20px;
     background-color: #2e2e2e;
     border-bottom: 2px solid #ffa51f;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
 }
 
 .sidebar-header h2 {
     color: #ffa51f;
-    margin: 0;
+    margin: 0 0 15px 0;
     font-size: 1.3rem;
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.editable-warehouse-name {
+    cursor: pointer;
+    padding: 5px;
+    border-radius: 4px;
+    transition: background-color 0.2s ease;
+    display: block;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.editable-warehouse-name:hover {
+    background-color: rgba(255, 165, 31, 0.1);
+}
+
+.warehouse-name-input {
+    width: 100%;
+    background-color: #1a1a1a;
+    border: 2px solid #ffa51f;
+    color: #ffffff;
+    padding: 8px;
+    border-radius: 6px;
+    font-size: 1.3rem;
+    font-weight: bold;
+    margin-bottom: 15px;
+}
+
+.warehouse-name-input:focus {
+    outline: none;
+    border-color: #ffb84d;
+    box-shadow: 0 0 0 2px rgba(255, 165, 31, 0.3);
+}
+
+.header-buttons {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.btn-back,
+.btn-share {
+    padding: 8px 15px;
+    border-radius: 6px;
+    font-size: 0.9rem;
+    transition: all 0.2s ease;
+    border: none;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-block;
 }
 
 .btn-back {
     background-color: #444;
     color: #ffffff;
-    padding: 8px 15px;
-    border-radius: 6px;
-    text-decoration: none;
-    font-size: 0.9rem;
-    transition: all 0.2s ease;
 }
 
 .btn-back:hover {
     background-color: #555;
     color: #ffa51f;
+}
+
+.btn-share {
+    background-color: #4a9eff;
+    color: #ffffff;
+}
+
+.btn-share:hover {
+    background-color: #3a8eef;
 }
 
 /* Search Container */
@@ -126,7 +182,6 @@
     background-color: #353535;
 }
 
-/* FIX #2: Fix pulsing animation overlap */
 .section-item.highlighted {
     border-color: #00ff00;
     background-color: #1a3a1a;
@@ -158,6 +213,37 @@
     color: #ffa51f;
     font-weight: bold;
     font-size: 1rem;
+    max-width: 180px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.editable-section-name {
+    cursor: pointer;
+    padding: 3px 6px;
+    border-radius: 4px;
+    transition: background-color 0.2s ease;
+}
+
+.editable-section-name:hover {
+    background-color: rgba(255, 165, 31, 0.2);
+}
+
+.section-name-input {
+    background-color: #1a1a1a;
+    border: 2px solid #ffa51f;
+    color: #ffffff;
+    padding: 3px 6px;
+    border-radius: 4px;
+    font-size: 1rem;
+    font-weight: bold;
+    width: 150px;
+}
+
+.section-name-input:focus {
+    outline: none;
+    border-color: #ffb84d;
 }
 
 .section-item-actions {
@@ -207,6 +293,10 @@
     color: #ffffff;
     font-size: 0.85rem;
     flex: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    min-width: 0;
 }
 
 .product-item-qty {
@@ -215,13 +305,23 @@
     font-weight: bold;
 }
 
+.btn-edit-product,
 .btn-delete-product {
     background-color: transparent;
     color: #888;
     border: none;
     cursor: pointer;
-    font-size: 1.2rem;
+    font-size: 1rem;
     transition: color 0.2s ease;
+    padding: 0 3px;
+}
+
+.btn-edit-product:hover {
+    color: #4a9eff;
+}
+
+.btn-delete-product {
+    font-size: 1.2rem;
 }
 
 .btn-delete-product:hover {
@@ -274,6 +374,9 @@
     font-size: 0.7rem;
     text-align: center;
     overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    padding: 2px;
 }
 
 .grid-cell.occupied:hover {
@@ -281,7 +384,6 @@
     border-color: #ffa51f;
 }
 
-/* FIX #2: Fix grid cell pulsing animation */
 .grid-cell.highlighted {
     background-color: #00ff00 !important;
     border: 2px solid #00aa00 !important;
@@ -378,6 +480,72 @@
     background-color: #ffb84d;
 }
 
+/* Share Modal Specific Styles */
+.shared-users-title {
+    color: #ffa51f;
+    font-size: 1rem;
+    margin-bottom: 10px;
+}
+
+.shared-users-list {
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+.loading-users {
+    color: #888;
+    font-style: italic;
+    text-align: center;
+    padding: 20px;
+}
+
+.shared-user-item {
+    background-color: #1a1a1a;
+    padding: 12px;
+    border-radius: 6px;
+    margin-bottom: 8px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.shared-user-info {
+    flex: 1;
+}
+
+.shared-user-name {
+    color: #ffffff;
+    font-weight: bold;
+    font-size: 0.9rem;
+}
+
+.shared-user-email {
+    color: #aaa;
+    font-size: 0.8rem;
+}
+
+.btn-remove-user {
+    background-color: #ff4444;
+    color: #ffffff;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.85rem;
+    transition: all 0.2s ease;
+}
+
+.btn-remove-user:hover {
+    background-color: #ff0000;
+}
+
+.no-shared-users {
+    color: #888;
+    font-style: italic;
+    text-align: center;
+    padding: 20px;
+}
+
 /* Responsive Design */
 @media screen and (max-width: 1200px) {
     .sidebar {
@@ -402,7 +570,17 @@
 
     .sidebar {
         width: 100%;
-        max-height: 40vh;
+        max-height: 60vh;
+    }
+
+    .header-buttons {
+        justify-content: space-between;
+    }
+
+    .btn-back,
+    .btn-share {
+        flex: 1;
+        text-align: center;
     }
 
     .grid-area {

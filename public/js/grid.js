@@ -20,11 +20,96 @@ document.addEventListener("DOMContentLoaded", function () {
     const addProductBtn = document.getElementById("addProductBtn");
     const modalSectionName = document.getElementById("modalSectionName");
 
+    // Edit product modal elements
+    const editProductNameInput = document.getElementById("editProductName");
+    const editProductSkuInput = document.getElementById("editProductSku");
+    const editProductQuantityInput = document.getElementById(
+        "editProductQuantity"
+    );
+    const editProductIdInput = document.getElementById("editProductId");
+    const editProductSectionIdInput = document.getElementById(
+        "editProductSectionId"
+    );
+    const updateProductBtn = document.getElementById("updateProductBtn");
+
+    // Share modal elements
+    const shareEmailInput = document.getElementById("shareEmail");
+    const shareWarehouseBtn = document.getElementById("shareWarehouseBtn");
+    const sharedUsersList = document.getElementById("sharedUsersList");
+
+    // Warehouse name editing elements
+    const warehouseNameDisplay = document.getElementById(
+        "warehouseNameDisplay"
+    );
+    const warehouseNameInput = document.getElementById("warehouseNameInput");
+
     let sections = [];
     let creatingSection = false;
     let newSectionName = "";
     let draggedSection = null;
-    let currentSearchTerm = ""; // Track current search
+    let currentSearchTerm = "";
+
+    // ============ WAREHOUSE NAME EDITING ============
+
+    warehouseNameDisplay.addEventListener("click", function () {
+        warehouseNameDisplay.style.display = "none";
+        warehouseNameInput.style.display = "block";
+        warehouseNameInput.focus();
+        warehouseNameInput.select();
+    });
+
+    warehouseNameInput.addEventListener("blur", function () {
+        saveWarehouseName();
+    });
+
+    warehouseNameInput.addEventListener("keydown", function (e) {
+        if (e.key === "Enter") {
+            saveWarehouseName();
+        } else if (e.key === "Escape") {
+            cancelWarehouseNameEdit();
+        }
+    });
+
+    function saveWarehouseName() {
+        const newName = warehouseNameInput.value.trim();
+
+        if (!newName) {
+            alert("Warehouse name cannot be empty");
+            cancelWarehouseNameEdit();
+            return;
+        }
+
+        fetch(`/warehouses/${warehouseId}`, {
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json",
+                "X-CSRF-TOKEN": csrfToken,
+            },
+            body: JSON.stringify({ warehouse_name: newName }),
+        })
+            .then((response) => response.json())
+            .then((data) => {
+                if (data.success) {
+                    warehouseNameDisplay.textContent = newName;
+                    warehouseNameDisplay.style.display = "block";
+                    warehouseNameInput.style.display = "none";
+                } else {
+                    alert("Error: " + data.message);
+                    cancelWarehouseNameEdit();
+                }
+            })
+            .catch((error) => {
+                console.error("Error:", error);
+                alert("Error updating warehouse name");
+                cancelWarehouseNameEdit();
+            });
+    }
+
+    function cancelWarehouseNameEdit() {
+        warehouseNameInput.value = warehouseNameDisplay.textContent;
+        warehouseNameDisplay.style.display = "block";
+        warehouseNameInput.style.display = "none";
+    }
 
     // ============ GRID GENERATION ============
 
@@ -49,7 +134,6 @@ document.addEventListener("DOMContentLoaded", function () {
     // ============ SECTION MANAGEMENT ============
 
     function renderSections() {
-        // Clear existing sections from grid
         document.querySelectorAll(".grid-cell").forEach((cell) => {
             cell.classList.remove("occupied");
             cell.textContent = "";
@@ -57,7 +141,6 @@ document.addEventListener("DOMContentLoaded", function () {
             cell.dataset.sectionId = "";
         });
 
-        // Place sections on grid
         sections.forEach((section) => {
             if (section.grid_x !== null && section.grid_y !== null) {
                 const cell = document.querySelector(
@@ -76,7 +159,6 @@ document.addEventListener("DOMContentLoaded", function () {
             }
         });
 
-        // Re-apply search highlights if there's an active search
         if (currentSearchTerm) {
             performSearch(currentSearchTerm);
         }
@@ -109,8 +191,16 @@ document.addEventListener("DOMContentLoaded", function () {
             header.classList.add("section-item-header");
 
             const name = document.createElement("span");
-            name.classList.add("section-item-name");
+            name.classList.add("section-item-name", "editable-section-name");
             name.textContent = section.section_name;
+            name.dataset.sectionId = section.id;
+            name.title = "Click to edit";
+
+            // Add click event for inline editing
+            name.addEventListener("click", (e) => {
+                e.stopPropagation();
+                editSectionName(section.id, name);
+            });
 
             const actions = document.createElement("div");
             actions.classList.add("section-item-actions");
@@ -141,18 +231,84 @@ document.addEventListener("DOMContentLoaded", function () {
             const productsContainer = document.createElement("div");
             productsContainer.classList.add("section-item-products");
 
-            // Load products for this section
             loadProductsForSection(section.id, productsContainer);
 
             sectionItem.appendChild(header);
             sectionItem.appendChild(productsContainer);
 
-            // Click to highlight on grid
             sectionItem.addEventListener("click", () =>
                 highlightSectionOnGrid(section.id)
             );
 
             sectionsList.appendChild(sectionItem);
+        });
+    }
+
+    // ============ SECTION NAME EDITING ============
+
+    function editSectionName(sectionId, nameElement) {
+        const currentName = nameElement.textContent;
+
+        const input = document.createElement("input");
+        input.type = "text";
+        input.classList.add("section-name-input");
+        input.value = currentName;
+
+        nameElement.replaceWith(input);
+        input.focus();
+        input.select();
+
+        const saveSectionName = () => {
+            const newName = input.value.trim();
+
+            if (!newName) {
+                alert("Section name cannot be empty");
+                input.replaceWith(nameElement);
+                return;
+            }
+
+            fetch(`/warehouses/${warehouseId}/sections/${sectionId}`, {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json",
+                    "X-CSRF-TOKEN": csrfToken,
+                },
+                body: JSON.stringify({ section_name: newName }),
+            })
+                .then((response) => response.json())
+                .then((data) => {
+                    if (data.success) {
+                        // Update section in sections array
+                        const section = sections.find((s) => s.id == sectionId);
+                        if (section) {
+                            section.section_name = newName;
+                        }
+                        // Re-render to update both sidebar and grid
+                        renderSections();
+                        renderSidebar();
+                    } else {
+                        alert("Error: " + data.message);
+                        input.replaceWith(nameElement);
+                    }
+                })
+                .catch((error) => {
+                    console.error("Error:", error);
+                    alert("Error updating section name");
+                    input.replaceWith(nameElement);
+                });
+        };
+
+        const cancelEdit = () => {
+            input.replaceWith(nameElement);
+        };
+
+        input.addEventListener("blur", saveSectionName);
+        input.addEventListener("keydown", (e) => {
+            if (e.key === "Enter") {
+                saveSectionName();
+            } else if (e.key === "Escape") {
+                cancelEdit();
+            }
         });
     }
 
@@ -169,7 +325,6 @@ document.addEventListener("DOMContentLoaded", function () {
         modal.show();
     });
 
-    // FIX #1: Handle modal close properly
     const createSectionModalElement =
         document.getElementById("createSectionModal");
 
@@ -177,20 +332,16 @@ document.addEventListener("DOMContentLoaded", function () {
         const name = sectionNameInput.value.trim();
 
         if (name && !creatingSection) {
-            // User entered a name and modal was closed naturally (not cancelled)
             newSectionName = name;
             creatingSection = true;
             alert("Click on an empty grid cell to place the section");
         } else if (creatingSection) {
-            // Modal was reopened, don't start a new creation
             return;
         } else {
-            // User clicked X or cancel without entering name
             cancelSectionCreation();
         }
     });
 
-    // Handle X button and Cancel button clicks
     createSectionModalElement.addEventListener("click", (e) => {
         if (
             e.target.classList.contains("btn-close") ||
@@ -209,7 +360,6 @@ document.addEventListener("DOMContentLoaded", function () {
     function placeSectionOnGrid(x, y) {
         if (!creatingSection || !newSectionName) return;
 
-        // Check if cell is occupied
         const cell = document.querySelector(
             `.grid-cell[data-x="${x}"][data-y="${y}"]`
         );
@@ -236,7 +386,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     sections.push(data.section);
                     renderSections();
                     renderSidebar();
-                    cancelSectionCreation(); // Clean up after placing
+                    cancelSectionCreation();
                 } else {
                     alert("Error: " + data.message);
                 }
@@ -312,7 +462,6 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     function updateSectionPosition(sectionId, x, y) {
-        // FIX: Clear highlights before moving
         clearHighlights();
 
         fetch(`/warehouses/${warehouseId}/sections/${sectionId}/position`, {
@@ -336,7 +485,6 @@ document.addEventListener("DOMContentLoaded", function () {
                         renderSections();
                         renderSidebar();
 
-                        // FIX: If there was an active search, re-apply it after moving
                         if (currentSearchTerm) {
                             performSearch(currentSearchTerm);
                         }
@@ -371,6 +519,7 @@ document.addEventListener("DOMContentLoaded", function () {
         const productItem = document.createElement("div");
         productItem.classList.add("product-item-small");
         productItem.dataset.productId = product.id;
+        productItem.dataset.sectionId = sectionId;
 
         const name = document.createElement("span");
         name.classList.add("product-item-name");
@@ -379,6 +528,14 @@ document.addEventListener("DOMContentLoaded", function () {
         const qty = document.createElement("span");
         qty.classList.add("product-item-qty");
         qty.textContent = `Qty: ${product.quantity}`;
+
+        const editBtn = document.createElement("button");
+        editBtn.classList.add("btn-edit-product");
+        editBtn.textContent = "✎";
+        editBtn.addEventListener("click", (e) => {
+            e.stopPropagation();
+            openEditProductModal(sectionId, product);
+        });
 
         const deleteBtn = document.createElement("button");
         deleteBtn.classList.add("btn-delete-product");
@@ -390,6 +547,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
         productItem.appendChild(name);
         productItem.appendChild(qty);
+        productItem.appendChild(editBtn);
         productItem.appendChild(deleteBtn);
         container.appendChild(productItem);
     }
@@ -437,7 +595,6 @@ document.addEventListener("DOMContentLoaded", function () {
                     productSkuInput.value = "";
                     productQuantityInput.value = "0";
 
-                    // Refresh sidebar
                     renderSidebar();
                 } else {
                     alert("Error: " + data.message);
@@ -446,6 +603,67 @@ document.addEventListener("DOMContentLoaded", function () {
             .catch((error) => {
                 console.error("Error:", error);
                 alert("Error creating product");
+            });
+    });
+
+    // ============ EDIT PRODUCT FUNCTIONALITY ============
+
+    function openEditProductModal(sectionId, product) {
+        editProductIdInput.value = product.id;
+        editProductSectionIdInput.value = sectionId;
+        editProductNameInput.value = product.product_name;
+        editProductSkuInput.value = product.sku || "";
+        editProductQuantityInput.value = product.quantity;
+
+        const modal = new bootstrap.Modal(
+            document.getElementById("editProductModal")
+        );
+        modal.show();
+    }
+
+    updateProductBtn.addEventListener("click", () => {
+        const productId = editProductIdInput.value;
+        const sectionId = editProductSectionIdInput.value;
+        const name = editProductNameInput.value.trim();
+        const sku = editProductSkuInput.value.trim();
+        const quantity = editProductQuantityInput.value.trim();
+
+        if (!name) {
+            alert("Please enter a product name");
+            return;
+        }
+
+        fetch(
+            `/warehouses/${warehouseId}/sections/${sectionId}/products/${productId}`,
+            {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json",
+                    "X-CSRF-TOKEN": csrfToken,
+                },
+                body: JSON.stringify({
+                    product_name: name,
+                    sku: sku || null,
+                    quantity: quantity || 0,
+                }),
+            }
+        )
+            .then((response) => response.json())
+            .then((data) => {
+                if (data.success) {
+                    const modal = bootstrap.Modal.getInstance(
+                        document.getElementById("editProductModal")
+                    );
+                    modal.hide();
+
+                    renderSidebar();
+                } else {
+                    alert("Error: " + data.message);
+                }
+            })
+            .catch((error) => {
+                console.error("Error:", error);
+                alert("Error updating product");
             });
     });
 
@@ -479,7 +697,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     searchInput.addEventListener("input", function () {
         const searchTerm = searchInput.value.trim().toLowerCase();
-        currentSearchTerm = searchTerm; // FIX #3: Track current search
+        currentSearchTerm = searchTerm;
 
         if (!searchTerm) {
             clearHighlights();
@@ -491,7 +709,6 @@ document.addEventListener("DOMContentLoaded", function () {
         performSearch(searchTerm);
     });
 
-    // FIX #3: Separate search logic into reusable function
     function performSearch(searchTerm) {
         sections.forEach((section) => {
             fetch(`/warehouses/${warehouseId}/sections/${section.id}/products`)
@@ -527,12 +744,10 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
     function highlightSection(sectionId) {
-        // FIX #3: Find section by ID to get current position
         const section = sections.find((s) => s.id == sectionId);
         if (!section || section.grid_x === null || section.grid_y === null)
             return;
 
-        // Highlight on grid using current position
         const gridCell = document.querySelector(
             `.grid-cell[data-x="${section.grid_x}"][data-y="${section.grid_y}"]`
         );
@@ -540,7 +755,6 @@ document.addEventListener("DOMContentLoaded", function () {
             gridCell.classList.add("highlighted");
         }
 
-        // Highlight in sidebar
         const sidebarItem = document.querySelector(
             `.section-item[data-section-id="${sectionId}"]`
         );
@@ -564,6 +778,128 @@ document.addEventListener("DOMContentLoaded", function () {
             .querySelectorAll(".section-item.highlighted")
             .forEach((item) => {
                 item.classList.remove("highlighted");
+            });
+    }
+
+    // ============ SHARE FUNCTIONALITY ============
+
+    document
+        .getElementById("shareWarehouseModal")
+        .addEventListener("shown.bs.modal", function () {
+            loadSharedUsers();
+        });
+
+    function loadSharedUsers() {
+        sharedUsersList.innerHTML = '<p class="loading-users">Loading...</p>';
+
+        fetch(`/warehouses/${warehouseId}/shared-users`)
+            .then((response) => response.json())
+            .then((data) => {
+                if (data.success && data.users) {
+                    sharedUsersList.innerHTML = "";
+
+                    if (data.users.length === 0) {
+                        sharedUsersList.innerHTML =
+                            '<p class="no-shared-users">No users shared with yet</p>';
+                    } else {
+                        data.users.forEach((user) => {
+                            addSharedUserToList(user);
+                        });
+                    }
+                } else {
+                    sharedUsersList.innerHTML =
+                        '<p class="no-shared-users">Error loading users</p>';
+                }
+            })
+            .catch((error) => {
+                console.error("Error loading shared users:", error);
+                sharedUsersList.innerHTML =
+                    '<p class="no-shared-users">Error loading users</p>';
+            });
+    }
+
+    function addSharedUserToList(user) {
+        const userItem = document.createElement("div");
+        userItem.classList.add("shared-user-item");
+        userItem.dataset.userId = user.id;
+
+        const userInfo = document.createElement("div");
+        userInfo.classList.add("shared-user-info");
+
+        const userName = document.createElement("div");
+        userName.classList.add("shared-user-name");
+        userName.textContent = user.name;
+
+        const userEmail = document.createElement("div");
+        userEmail.classList.add("shared-user-email");
+        userEmail.textContent = user.email;
+
+        userInfo.appendChild(userName);
+        userInfo.appendChild(userEmail);
+
+        const removeBtn = document.createElement("button");
+        removeBtn.classList.add("btn-remove-user");
+        removeBtn.textContent = "Remove";
+        removeBtn.addEventListener("click", () => removeSharedUser(user.id));
+
+        userItem.appendChild(userInfo);
+        userItem.appendChild(removeBtn);
+        sharedUsersList.appendChild(userItem);
+    }
+
+    shareWarehouseBtn.addEventListener("click", function () {
+        const email = shareEmailInput.value.trim();
+
+        if (!email) {
+            alert("Please enter an email address");
+            return;
+        }
+
+        fetch(`/warehouses/${warehouseId}/share`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "X-CSRF-TOKEN": csrfToken,
+            },
+            body: JSON.stringify({ email: email }),
+        })
+            .then((response) => response.json())
+            .then((data) => {
+                if (data.success) {
+                    shareEmailInput.value = "";
+                    alert("Warehouse shared successfully!");
+                    loadSharedUsers();
+                } else {
+                    alert("Error: " + data.message);
+                }
+            })
+            .catch((error) => {
+                console.error("Error:", error);
+                alert("Error sharing warehouse");
+            });
+    });
+
+    function removeSharedUser(userId) {
+        if (!confirm("Remove this user's access to the warehouse?")) return;
+
+        fetch(`/warehouses/${warehouseId}/shared-users/${userId}`, {
+            method: "DELETE",
+            headers: {
+                "X-CSRF-TOKEN": csrfToken,
+            },
+        })
+            .then((response) => response.json())
+            .then((data) => {
+                if (data.success) {
+                    alert("User removed successfully");
+                    loadSharedUsers();
+                } else {
+                    alert("Error: " + data.message);
+                }
+            })
+            .catch((error) => {
+                console.error("Error:", error);
+                alert("Error removing user");
             });
     }
 

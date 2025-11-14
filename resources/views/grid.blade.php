@@ -6,6 +6,15 @@
     <link rel="stylesheet" href="{{ asset('css/grid.css') }}?v={{ time() }}">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <meta name="warehouse-id" content="{{ $warehouse->id }}">
+
+    <style>
+        /* page content */
+        .content {
+            flex: 1;
+            width: 100%;
+            padding: 0px 0px !important;
+        }
+    </style>
 @endsection
 
 @section('content')
@@ -14,8 +23,16 @@
         <!-- Left Sidebar -->
         <div class="sidebar">
             <div class="sidebar-header">
-                <h2>{{ $warehouse->warehouse_name }}</h2>
-                <a href="{{ route('dashboard') }}" class="btn-back">← Back</a>
+                <h2 id="warehouseNameDisplay" class="editable-warehouse-name" title="Click to edit">
+                    {{ $warehouse->warehouse_name }}</h2>
+                <input type="text" id="warehouseNameInput" class="warehouse-name-input" style="display: none;"
+                    value="{{ $warehouse->warehouse_name }}">
+                <div class="header-buttons">
+                    <a href="{{ route('dashboard') }}" class="btn-back">← Back</a>
+                    <button type="button" class="btn-share" data-bs-toggle="modal" data-bs-target="#shareWarehouseModal">
+                        Share
+                    </button>
+                </div>
             </div>
 
             <!-- Search Bar -->
@@ -35,7 +52,8 @@
                     <div class="section-item" data-section-id="{{ $section->id }}" data-grid-x="{{ $section->grid_x }}"
                         data-grid-y="{{ $section->grid_y }}">
                         <div class="section-item-header">
-                            <span class="section-item-name">{{ $section->section_name }}</span>
+                            <span class="section-item-name editable-section-name" data-section-id="{{ $section->id }}"
+                                title="Click to edit">{{ $section->section_name }}</span>
                             <div class="section-item-actions">
                                 <button class="btn-add-product" data-section-id="{{ $section->id }}">+</button>
                                 <button class="btn-delete-section" data-section-id="{{ $section->id }}">×</button>
@@ -43,9 +61,12 @@
                         </div>
                         <div class="section-item-products">
                             @foreach ($section->products as $product)
-                                <div class="product-item-small" data-product-id="{{ $product->id }}">
+                                <div class="product-item-small" data-product-id="{{ $product->id }}"
+                                    data-section-id="{{ $section->id }}">
                                     <span class="product-item-name">{{ $product->product_name }}</span>
                                     <span class="product-item-qty">Qty: {{ $product->quantity }}</span>
+                                    <button class="btn-edit-product" data-section-id="{{ $section->id }}"
+                                        data-product-id="{{ $product->id }}">✎</button>
                                     <button class="btn-delete-product" data-section-id="{{ $section->id }}"
                                         data-product-id="{{ $product->id }}">×</button>
                                 </div>
@@ -113,6 +134,72 @@
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
                     <button type="button" class="btn btn-primary" id="addProductBtn">Add Product</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal for Editing Product -->
+    <div class="modal fade" id="editProductModal" tabindex="-1" aria-labelledby="editProductModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editProductModalLabel">Edit Product</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" id="editProductId">
+                    <input type="hidden" id="editProductSectionId">
+                    <div class="mb-3">
+                        <label for="editProductName" class="form-label">Product Name</label>
+                        <input type="text" class="form-control" id="editProductName"
+                            placeholder="Enter product name">
+                    </div>
+                    <div class="mb-3">
+                        <label for="editProductSku" class="form-label">SKU (Optional)</label>
+                        <input type="text" class="form-control" id="editProductSku" placeholder="Enter SKU">
+                    </div>
+                    <div class="mb-3">
+                        <label for="editProductQuantity" class="form-label">Quantity</label>
+                        <input type="number" class="form-control" id="editProductQuantity" placeholder="Enter quantity"
+                            value="0" min="0">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary" id="updateProductBtn">Update Product</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal for Sharing Warehouse -->
+    <div class="modal fade" id="shareWarehouseModal" tabindex="-1" aria-labelledby="shareWarehouseModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="shareWarehouseModalLabel">Share Warehouse</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="shareEmail" class="form-label">User Email</label>
+                        <input type="email" class="form-control" id="shareEmail" placeholder="Enter user email">
+                    </div>
+                    <button type="button" class="btn btn-primary mb-3" id="shareWarehouseBtn">Add User</button>
+
+                    <hr class="my-4">
+
+                    <h6 class="shared-users-title">Users with Access</h6>
+                    <div id="sharedUsersList" class="shared-users-list">
+                        <!-- Shared users will be loaded here -->
+                        <p class="loading-users">Loading...</p>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                 </div>
             </div>
         </div>

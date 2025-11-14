@@ -14,22 +14,32 @@ class Warehouse extends Model
         'user_id',
     ];
 
-    // link user to warehouse
+    // Original creator - keep for backward compatibility
     public function user()
     {
         return $this->belongsTo(User::class);
     }
 
-    // In Warehouse Model
+    public function users()
+    {
+        return $this->belongsToMany(User::class, 'warehouse_user')->withTimestamps();
+    }
+
+    // A warehouse has many sections
     public function sections()
     {
         return $this->hasMany(Section::class);
     }
 
+    // A warehouse has many products through sections
     public function products()
     {
-        return $this->hasMany(Product::class);
+        return $this->hasManyThrough(Product::class, Section::class);
     }
-
-
+    
+    // Helper method: Check if user has access
+    public function hasAccess($userId)
+    {
+        return $this->users()->where('user_id', $userId)->exists();
+    }
 }

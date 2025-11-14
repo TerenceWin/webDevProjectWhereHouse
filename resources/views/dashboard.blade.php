@@ -54,21 +54,24 @@
         </div>
     </div>
 
-    <div class="warehouse-list mt-4">
-        @foreach (auth()->user()->warehouses as $warehouse)
-            <div class="warehouse-icon" data-id="{{ $warehouse->id }}">
-                <!-- Using an <a> tag for routing to ensure better semantics -->
-                <a href="{{ url('/warehouses/' . $warehouse->id) }}" class="warehouse-name">
-                    {{ $warehouse->warehouse_name }}
-                </a>
-
-                <!-- Consistent Delete Button -->
-                <button class="delete-warehouse-btn" data-id="{{ $warehouse->id }}">x</button>
+    <!-- Warehouse Sections Container -->
+    <div class="warehouse-sections-container">
+        <!-- My Warehouses Section -->
+        <div class="warehouse-section">
+            <h3 class="section-title">My Warehouses</h3>
+            <div class="warehouse-list my-warehouses" id="myWarehouses">
+                <!-- My warehouses will be loaded here by JavaScript -->
             </div>
-        @endforeach
+        </div>
+
+        <!-- Shared Warehouses Section -->
+        <div class="warehouse-section">
+            <h3 class="section-title">Shared With Me</h3>
+            <div class="warehouse-list shared-warehouses" id="sharedWarehouses">
+                <!-- Shared warehouses will be loaded here by JavaScript -->
+            </div>
+        </div>
     </div>
-
-
 
 @endsection
 

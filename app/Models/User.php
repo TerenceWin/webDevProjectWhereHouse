@@ -46,10 +46,9 @@ class User extends Authenticatable
         ];
     }
 
-    // link user to warehouse
     public function warehouses()
     {
-        return $this->hasMany(Warehouse::class);
+        return $this->belongsToMany(Warehouse::class, 'warehouse_user')->withTimestamps();
     }
 
     // In Warehouse Model
@@ -62,8 +61,6 @@ class User extends Authenticatable
     {
         return $this->hasMany(Product::class);
     }
-
-    
     
 
 }

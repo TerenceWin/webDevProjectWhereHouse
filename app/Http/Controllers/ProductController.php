@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Product;
 use App\Models\Section;
+use App\Models\Warehouse;
 use Illuminate\Http\Request;
 
 class ProductController extends Controller
@@ -18,12 +19,19 @@ class ProductController extends Controller
                 'quantity' => 'nullable|integer|min:0',
             ]);
 
-            // Verify the section belongs to this warehouse and user
-            $section = auth()->user()
-                ->warehouses()
-                ->findOrFail($warehouseId)
-                ->sections()
-                ->findOrFail($sectionId);
+            // Find the warehouse
+            $warehouse = Warehouse::findOrFail($warehouseId);
+            
+            // Check if user has access
+            if (!$warehouse->hasAccess(auth()->id())) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Access denied'
+                ], 403);
+            }
+
+            // Verify the section belongs to this warehouse
+            $section = $warehouse->sections()->findOrFail($sectionId);
 
             $product = Product::create([
                 'product_name' => $request->product_name,
@@ -49,12 +57,18 @@ class ProductController extends Controller
     public function index($warehouseId, $sectionId)
     {
         try {
-            $section = auth()->user()
-                ->warehouses()
-                ->findOrFail($warehouseId)
-                ->sections()
-                ->findOrFail($sectionId);
+            // Find the warehouse
+            $warehouse = Warehouse::findOrFail($warehouseId);
+            
+            // Check if user has access
+            if (!$warehouse->hasAccess(auth()->id())) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Access denied'
+                ], 403);
+            }
 
+            $section = $warehouse->sections()->findOrFail($sectionId);
             $products = $section->products;
 
             return response()->json([
@@ -72,12 +86,18 @@ class ProductController extends Controller
     public function destroy($warehouseId, $sectionId, $productId)
     {
         try {
-            $section = auth()->user()
-                ->warehouses()
-                ->findOrFail($warehouseId)
-                ->sections()
-                ->findOrFail($sectionId);
+            // Find the warehouse
+            $warehouse = Warehouse::findOrFail($warehouseId);
+            
+            // Check if user has access
+            if (!$warehouse->hasAccess(auth()->id())) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Access denied'
+                ], 403);
+            }
 
+            $section = $warehouse->sections()->findOrFail($sectionId);
             $product = $section->products()->findOrFail($productId);
             $product->delete();
 
@@ -94,12 +114,18 @@ class ProductController extends Controller
     public function show($warehouseId, $sectionId, $productId)
     {
         try {
-            $section = auth()->user()
-                ->warehouses()
-                ->findOrFail($warehouseId)
-                ->sections()
-                ->findOrFail($sectionId);
+            // Find the warehouse
+            $warehouse = Warehouse::findOrFail($warehouseId);
+            
+            // Check if user has access
+            if (!$warehouse->hasAccess(auth()->id())) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Access denied'
+                ], 403);
+            }
 
+            $section = $warehouse->sections()->findOrFail($sectionId);
             $product = $section->products()->findOrFail($productId);
 
             return response()->json([
@@ -124,12 +150,18 @@ class ProductController extends Controller
                 'quantity' => 'nullable|integer|min:0',
             ]);
 
-            $section = auth()->user()
-                ->warehouses()
-                ->findOrFail($warehouseId)
-                ->sections()
-                ->findOrFail($sectionId);
+            // Find the warehouse
+            $warehouse = Warehouse::findOrFail($warehouseId);
+            
+            // Check if user has access
+            if (!$warehouse->hasAccess(auth()->id())) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Access denied'
+                ], 403);
+            }
 
+            $section = $warehouse->sections()->findOrFail($sectionId);
             $product = $section->products()->findOrFail($productId);
             
             $product->update($request->only(['product_name', 'sku', 'quantity']));

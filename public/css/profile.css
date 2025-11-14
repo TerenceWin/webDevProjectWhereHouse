@@ -1,0 +1,85 @@
+/* box to hold the login content */
+.profile {
+    padding: 0;
+}
+
+/* profile button styling */
+.profile button {
+    margin-top: 10px;
+    background-color: #242424;
+    padding: 10px 10px;
+    border-radius: 8px;
+    font-size: 1rem;
+    cursor: pointer;
+}
+
+/* login button hover */
+.profile button:hover {
+    background-color: #2e2e2e;
+}
+
+/* css to edit the breeze error */
+.profile-error {
+    color: #ff1900;
+    font-size: 1rem;
+    list-style-type: none;
+}
+
+/* Delete Account Button */
+.btn-danger {
+    background-color: #dc3545 !important;
+    color: #ffffff;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.btn-danger:hover {
+    background-color: #c82333;
+}
+
+#deleteAccountModal .modal-content {
+    background-color: #2e2e2e;
+    color: #ffffff;
+}
+
+#deleteAccountModal .modal-header {
+    border-bottom: 1px solid #dc3545;
+}
+
+#deleteAccountModal .modal-title {
+    color: #dc3545;
+}
+
+#deleteAccountModal .modal-body .form-label {
+    color: #ffffff;
+}
+
+#deleteAccountModal .modal-body .form-control {
+    background-color: #242424;
+    border: 1px solid #dc3545;
+    color: #ffffff;
+}
+
+#deleteAccountModal .modal-body .form-control:focus {
+    background-color: #242424;
+    border-color: #dc3545;
+    color: #ffffff;
+    box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, 0.25);
+}
+
+#deleteAccountModal .modal-footer {
+    border-top: 1px solid #444;
+}
+
+#deleteAccountModal .btn-secondary {
+    background-color: #444;
+    color: #ffffff;
+}
+
+#deleteAccountModal .btn-secondary:hover {
+    background-color: #555;
+}
